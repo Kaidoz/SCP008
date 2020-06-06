@@ -36,13 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>E:\Games\SteamLibrary\steamapps\common\SCP Secret Laboratory ServerMod\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Smod2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Smod2.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Smod2">
+      <HintPath>E:\Games\SteamLibrary\steamapps\common\SCP Secret Laboratory ServerMod\SCPSL_Data\Managed\Smod2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

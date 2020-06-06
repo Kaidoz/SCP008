@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace SCP008PLUGIN
 {
 	class EventHandlers : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerWaitingForPlayers,
-		IEventHandlerPlayerHurt, IEventHandlerPlayerDie, IEventHandlerMedkitUse, IEventHandlerUpdate, IEventHandlerCheckEscape
+		IEventHandlerPlayerHurt, IEventHandlerPlayerDie, IEventHandlerMedicalUse, IEventHandlerUpdate, IEventHandlerCheckEscape
 	{
 		private SCP008 plugin;
 		private Server Server => PluginManager.Manager.Server;
@@ -31,20 +31,20 @@ namespace SCP008PLUGIN
 		{
 			if (ev.Attacker.PlayerId == ev.Player.PlayerId || !IsEnabled) return;
 
-			int damageAmount = (ev.Attacker.TeamRole.Role == Role.ZOMBIE) ? plugin.GetConfigInt(SCP008.swingDamageConfigKey) : 0;
-			int infectChance = (ev.Attacker.TeamRole.Role == Role.ZOMBIE) ? plugin.GetConfigInt(SCP008.infectChanceConfigKey) : 0;
-			int infectOnKillChance = (ev.Attacker.TeamRole.Role == Role.ZOMBIE && ev.Damage >= ev.Player.GetHealth()) ? plugin.GetConfigInt(SCP008.infectKillChanceConfigKey) : 0;
+			int damageAmount = (ev.Attacker.TeamRole.Role == Smod2.API.RoleType.ZOMBIE) ? plugin.GetConfigInt(SCP008.swingDamageConfigKey) : 0;
+			int infectChance = (ev.Attacker.TeamRole.Role == Smod2.API.RoleType.ZOMBIE) ? plugin.GetConfigInt(SCP008.infectChanceConfigKey) : 0;
+			int infectOnKillChance = (ev.Attacker.TeamRole.Role == Smod2.API.RoleType.ZOMBIE && ev.Damage >= ev.Player.GetHealth()) ? plugin.GetConfigInt(SCP008.infectKillChanceConfigKey) : 0;
 
-			if (ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL && ev.Attacker.TeamRole.Role == Role.ZOMBIE
+			if (ev.Player.TeamRole.Team == Smod2.API.TeamType.TUTORIAL && ev.Attacker.TeamRole.Role == Smod2.API.RoleType.ZOMBIE
 				&& !plugin.GetConfigBool(SCP008.canHitTutConfigKey))
 			{ ev.Damage = 0f; return; }
 
 			//Sets damage to config amount if above 0
-			if (ev.Attacker.TeamRole.Role == Role.ZOMBIE && damageAmount > 0)
+			if (ev.Attacker.TeamRole.Role == Smod2.API.RoleType.ZOMBIE && damageAmount > 0)
 				ev.Damage = damageAmount;
 			
 			//When a zombie damages a player, adds them to list of infected players to damage
-			if (IsEnabled && ev.Attacker.TeamRole.Role == Role.ZOMBIE
+			if (IsEnabled && ev.Attacker.TeamRole.Role == Smod2.API.RoleType.ZOMBIE
 				&& !SCP008.playersToDamage.Contains(ev.Player.SteamId)
 				&& infectChance > 0
 				&& new Random().Next(1, 100) <= infectChance)
@@ -55,7 +55,7 @@ namespace SCP008PLUGIN
 					SCP008.playersToDamage.Add(ev.Player.SteamId);
 			}
 
-			if (ev.Attacker.TeamRole.Role == Role.ZOMBIE
+			if (ev.Attacker.TeamRole.Role == Smod2.API.RoleType.ZOMBIE
 				&& ev.Damage >= ev.Player.GetHealth()
 				&& (infectOnKillChance > 99 || new Random().Next(1, 100) <= infectOnKillChance))
 			{
@@ -71,7 +71,7 @@ namespace SCP008PLUGIN
 				SCP008.playersToDamage.Remove(ev.Player.SteamId);
 		}
 
-		public void OnMedkitUse(PlayerMedkitUseEvent ev)
+		public void OnMedicalUse(PlayerMedicalUseEvent ev)
 		{
 			if (!IsEnabled) return;
 			int cureChance = plugin.GetConfigInt(SCP008.cureChanceConfigKey);
@@ -150,7 +150,7 @@ namespace SCP008PLUGIN
 					foreach(Player p in Server.GetPlayers())
 					{
 						//If the victim is human and the player is in the infected list
-						if ((p.TeamRole.Team != Smod2.API.Team.SCP && p.TeamRole.Team != Smod2.API.Team.SPECTATOR) && SCP008.playersToDamage.Contains(p.SteamId))
+						if ((p.TeamRole.Team != Smod2.API.TeamType.SCP && p.TeamRole.Team != Smod2.API.TeamType.SPECTATOR) && SCP008.playersToDamage.Contains(p.SteamId))
 						{
 							//If the damage doesnt kill, deal the damage
 							if (damageAmount < p.GetHealth())
@@ -176,11 +176,10 @@ namespace SCP008PLUGIN
 			if (SCP008.playersToDamage.Contains(player.SteamId))
 				SCP008.playersToDamage.Remove(player.SteamId);
 			Vector pos = player.GetPosition();
-			player.ChangeRole(Role.SCP_049_2, spawnTeleport: false);
+			player.ChangeRole(Smod2.API.RoleType.SCP_049_2, spawnTeleport: false);
 			player.Teleport(pos);
 			plugin.SetCanAnnounce(true);
 			plugin.Debug("Changed " + player.Name + " to SCP-008");
 		}
-
 	}
 }
