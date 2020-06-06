@@ -70,9 +70,9 @@ namespace SCP008PLUGIN.Command
 						int x = 0;
 						foreach(Player pl in Server.GetPlayers()
 							.Where(ply => 
-							ply.TeamRole.Role != Role.SPECTATOR &&
-							ply.TeamRole.Role != Role.UNASSIGNED &&
-							ply.TeamRole.Role != Role.ZOMBIE))
+							ply.TeamRole.Role != Smod2.API.RoleType.SPECTATOR &&
+							ply.TeamRole.Role != Smod2.API.RoleType.UNASSIGNED &&
+							ply.TeamRole.Role != Smod2.API.RoleType.ZOMBIE))
 						{
 							string arg = (args.Length > 1 && !string.IsNullOrEmpty(args[1])) ? args[1].ToLower() : "";
 							if (SCP008.playersToDamage.Contains(pl.SteamId) && arg != "infect")

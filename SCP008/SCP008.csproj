@@ -60,6 +60,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) D:\SCP_SL_SERVER\sm_plugins</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetPath) "E:\Games\SteamLibrary\steamapps\common\SCP Secret Laboratory ServerMod\sm_plugins"</PostBuildEvent>
   </PropertyGroup>
 </Project>
